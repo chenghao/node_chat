@@ -1,0 +1,14 @@
+{
+  "name": "onetongjiang",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node chat.js"
+  },
+  "dependencies": {
+    "redis": "",
+    "socket.io": "",
+    "socket.io-redis": "",
+    "express": ""
+  }
+}

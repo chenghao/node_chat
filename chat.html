@@ -1,0 +1,118 @@
+﻿<html>
+<head>
+
+    <title>REAL TIME Node.js, Redis and Socket.IO</title>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+
+    <script type="text/javascript" src="./socket.io.js"></script>
+    <script src="./jquery-1.11.1.min.js"></script>
+
+    <script type="text/javascript">
+
+        var socket = io.connect('http://localhost:3000/');
+
+        socket.on('connect', function (data) {
+            setStatus('connected');
+        });
+
+        socket.on('reconnecting', function (data) {
+            setStatus('reconnecting');
+            //socket.send('reconnect', {msg: 'reconnecting'})
+        });
+
+        socket.on('msg', function (data) {
+            console.log('received a message: ', data);
+            addMessage(data);
+        });
+
+        socket.on('groupchat', function (data) {
+            console.log('received groupchat message: ', data);
+            //addMessage(data);
+        });
+
+        function addMessage(data) {
+            data = JSON.stringify(data)
+            $('#content').append(data);
+        }
+
+        function setStatus(msg) {
+            console.log('Connection Status : ' + msg);
+        }
+
+
+        $(function () {
+            $('#btn_chat').click(function () {
+                var data = {
+                    toWho: $('#towho').val(),
+                    fromWho: $('#myid').val(),
+                    msg: $('#msg').val()
+                }
+                socket.emit('chat', data);
+            });
+
+            $('#btn_groupchat').click(function () {
+                var data = {
+                    groupId: $('#group_id').val(),
+                    msg: $('#group_msg').val()
+                };
+
+                socket.emit('groupchat', data);
+            });
+
+            $('#btn_login').click(function () {
+                var id = $('#myid').val();
+                var data = {
+                    myUserId: id
+                };
+                socket.emit('login', data);
+            });
+
+            $('#btn_addgroup').click(function () {
+                var id = $('#group_id').val();
+                var userId = $('#myid').val();
+                var data = {
+                    groupId: id,
+                    userId: userId
+                };
+                socket.emit('addgroup', data);
+            });
+
+            $('#btn_logoutgroup').click(function () {
+                var id = $('#logout_group_id').val();
+                var userId = $('#myid').val();
+                var data = {
+                    groupId: id,
+                    userId: userId
+                };
+                socket.emit('logoutgroup', data);
+            });
+        })
+
+    </script>
+</head>
+
+<body>
+
+    <div id="content" style="width: 500px; height: 200px; border: 1px solid #000;">
+
+    </div>
+
+    my id:<input type="text" id="myid">
+    <input type="button" value="login" id="btn_login"><br/>
+
+    to who:<input type="text" id="towho">
+    msg:<input type="text" id="msg">
+    <input type="button" value="chat" id="btn_chat"><br/>
+
+    group msg:<input type="text" id="group_msg">
+    <input type="button" value="groupChat" id="btn_groupchat"><br/>
+
+    add group:<input type="text" id="group_id">
+    <input type="button" value="addGroup" id="btn_addgroup"><br/>
+
+    logout group:<input type="text" id="logout_group_id">
+    <input type="button" value="logoutGroup" id="btn_logoutgroup"><br/>
+</body>
+</html>
+
