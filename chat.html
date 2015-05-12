@@ -5,8 +5,8 @@
 
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 
-    <script type="text/javascript" src="./socket.io.js"></script>
-    <script src="./jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="lib/socket.io.js"></script>
+    <script src="lib/jquery-1.11.1.min.js"></script>
 
     <script type="text/javascript">
 
@@ -28,10 +28,14 @@
 
         socket.on('groupchat', function (data) {
             console.log('received groupchat message: ', data);
-            //addMessage(data);
+            addGroupMessage(data);
         });
 
         function addMessage(data) {
+            data = JSON.stringify(data)
+            $('#content').append(data);
+        }
+		function addGroupMessage(data) {
             data = JSON.stringify(data)
             $('#content').append(data);
         }
